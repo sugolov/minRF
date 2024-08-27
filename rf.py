@@ -3,6 +3,9 @@ import argparse
 
 import torch
 
+from datetime import datetime
+def timestamp():
+    return datetime.now().strftime("%H:%M:%S")
 
 class RF:
     def __init__(self, model, ln=True):
@@ -16,7 +19,9 @@ class RF:
             t = torch.sigmoid(nt)
         else:
             t = torch.rand((b,)).to(x.device)
+        #print(t)
         texp = t.view([b, *([1] * len(x.shape[1:]))])
+        #print(texp)
         z1 = torch.randn_like(x)
         zt = (1 - texp) * x + texp * z1
         vtheta = self.model(zt, t, cond)
@@ -58,6 +63,8 @@ if __name__ == "__main__":
     import wandb
     from dit import DiT_Llama
 
+    torch.cuda.empty_cache()
+
     parser = argparse.ArgumentParser(description="use cifar?")
     parser.add_argument("--cifar", action="store_true")
     args = parser.parse_args()
@@ -76,7 +83,7 @@ if __name__ == "__main__":
         )
         channels = 3
         model = DiT_Llama(
-            channels, 32, dim=256, n_layers=10, n_heads=8, num_classes=10
+            channels, 32, dim=128, n_layers=5, n_heads=4, num_classes=10
         ).cuda()
 
     else:
@@ -91,7 +98,7 @@ if __name__ == "__main__":
         )
         channels = 1
         model = DiT_Llama(
-            channels, 32, dim=64, n_layers=6, n_heads=4, num_classes=10
+            channels, 32, dim=64, n_layers=6, n_heads=8, num_classes=10
         ).cuda()
 
     model_size = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -157,5 +164,8 @@ if __name__ == "__main__":
 
             last_img = gif[-1]
             last_img.save(f"contents/sample_{epoch}_last.png")
+
+        if (epoch + 1) % 10 == 0:
+            torch.save(model.state_dict(), f"weights/rf_cifar_{epoch}_{timestamp()}")
 
         rf.model.train()
