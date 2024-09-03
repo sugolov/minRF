@@ -83,7 +83,7 @@ if __name__ == "__main__":
         )
         channels = 3
         model = DiT_Llama(
-            channels, 32, dim=128, n_layers=10, n_heads=8, num_classes=10
+            channels, 32, dim=256, n_layers=10, n_heads=8, num_classes=10
         ).cuda()
 
     else:
@@ -165,7 +165,7 @@ if __name__ == "__main__":
             last_img = gif[-1]
             last_img.save(f"contents/sample_{epoch}_last.png")
 
-        if (epoch + 1) % 10 == 0:
-            torch.save(model.state_dict(), f"weights/rf_cifar_{epoch}_{timestamp()}")
+        if epoch < 20 or (epoch + 1) % 10 == 0:
+            torch.save(model.state_dict(), f"weights/dit_256/rf_cifar_{epoch}_{timestamp()}")
 
         rf.model.train()
