@@ -83,7 +83,7 @@ if __name__ == "__main__":
         )
         channels = 3
         model = DiT_Llama(
-            channels, 32, dim=128, n_layers=5, n_heads=4, num_classes=10
+            channels, 32, dim=128, n_layers=10, n_heads=8, num_classes=10
         ).cuda()
 
     else:
