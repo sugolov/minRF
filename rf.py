@@ -169,6 +169,6 @@ if __name__ == "__main__":
             last_img.save(f"contents/sample_{epoch}_last.png")
 
         if epoch < 20 or (epoch + 1) % 10 == 0:
-            torch.save(model.state_dict(), f"weights/dit_256/rf_cifar_{epoch}_{timestamp()}")
+            torch.save(model.state_dict(), f"weights/dit_256_2/rf_cifar_{epoch}_{timestamp()}")
 
         rf.model.train()
