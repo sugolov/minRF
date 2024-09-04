@@ -67,6 +67,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="use cifar?")
     parser.add_argument("--cifar", action="store_true")
+    parser.add_argument("--checkpoint", action="store", type=str, default=None)
     args = parser.parse_args()
     CIFAR = args.cifar
 
@@ -85,6 +86,8 @@ if __name__ == "__main__":
         model = DiT_Llama(
             channels, 32, dim=256, n_layers=10, n_heads=8, num_classes=10
         ).cuda()
+        if args.checkpoint is not None:
+            model.load_state_dict(torch.load(args.checkpoint))
 
     else:
         dataset_name = "mnist"
